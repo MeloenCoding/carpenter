@@ -1,15 +1,14 @@
 use carpenter::ConfigManager;
 
-#[derive(ConfigManager, Default, Debug)]
+#[derive(ConfigManager, PartialEq, Debug)]
 struct Config {
     _a: i32,
     _b: bool,
-    _c: bool,
-    _d: String,
+    _c: String,
 }
 
 fn main() {
-    let test_config_builder = Config::create(
+    let test_config_factory = Config::create(
         "meloencoding", 
         "config-rs-test",
         "test.bin"
@@ -18,10 +17,9 @@ fn main() {
     let sample_config = Config {
         _a: 400,
         _b: true,
-        _c: false,
-        _d: String::from("Hey"),
+        _c: String::from("Hey"),
     };
-    test_config_builder.save(&sample_config);
+    test_config_factory.save(&sample_config);
 
-    dbg!(test_config_builder.read());
+    assert_eq!(sample_config, test_config_factory.read());
 }

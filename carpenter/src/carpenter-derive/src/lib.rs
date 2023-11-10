@@ -6,7 +6,6 @@ use quote::{quote, ToTokens};
 #[proc_macro_derive(ConfigManager)] 
 pub fn config_derive_macro(item: TokenStream) -> TokenStream {
     let ast: DeriveInput = parse_macro_input!(item as DeriveInput);
-    // println!("{:#?}", ast.data);
     return impl_config_trait(ast);
 }
 
@@ -87,15 +86,14 @@ fn impl_config_trait(ast: syn::DeriveInput) -> TokenStream {
         use bytestream::{StreamWriter, ByteOrder, StreamReader};
         
 
-        struct #setting_id<T> {
+        struct #setting_id {
             path: PathBuf,
             username: String, 
             application_name: String,
             config_name: String,
-            map_type: T
         }
 
-        impl<T: Default> #setting_id<T> {
+        impl #setting_id {
             fn create_dir(&self) {
                 std::fs::create_dir_all(&self.path).expect("Create Dir error");
             }
@@ -125,13 +123,12 @@ fn impl_config_trait(ast: syn::DeriveInput) -> TokenStream {
         }
 
         impl #config_id {
-            pub fn create(username: &str, application_name: &str, config_name: &str) -> #setting_id<#config_id> {
+            pub fn create(username: &str, application_name: &str, config_name: &str) -> #setting_id {
                 let builder = #setting_id {
                     path: PathBuf::from(ConfigPath::new(username, application_name).inner.clone()),
                     username: username.to_string(), 
                     application_name: application_name.to_string(), 
-                    config_name: config_name.to_string(),
-                    map_type: #config_id::default()
+                    config_name: config_name.to_string()
                 };
                 return builder;
             }

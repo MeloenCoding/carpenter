@@ -8,4 +8,3 @@ edition = "2021"
 [dependencies]
 bytestream = "0.4.1"
 carpenter = { path = "carpenter"}
-serde = "1.0.189"
