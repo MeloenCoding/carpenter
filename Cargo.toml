@@ -1,0 +1,11 @@
+[package]
+name = "config-rs-example"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+bytestream = "0.4.1"
+carpenter = { path = "carpenter"}
+serde = "1.0.189"
