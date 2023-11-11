@@ -39,7 +39,7 @@ fn main() {
     // Lin: /home/alice/.config/{application name}/{config file name}
     // Win: C:\Users\Alice\AppData\Roaming\{username}\{application name}\config/{config file name}
     // Mac: /Users/Alice/Library/Application Support/com.{username}.{application name}
-    
+
 /{config file name}
     // To save your config
     let sample_config = Config {
@@ -60,9 +60,5 @@ fn main() {
 - **i32** = 4 bytes so 0x00-0x03 is 0x00_00_01_90 which is 400 in decimal. 
 - **bool** = 1 byte so 0x04-0x04 is 0x01 which is true in rust.
 - **String** = is in this case 4 bytes so 0x05-0x08 is 0x48_65_79_00 which is "Hey\0". String gets null terminated.
-
-#### Location
-
-
 
 <img title="config file in hxd" alt="config file in hxd" src="hxd-file-example.JPG">
