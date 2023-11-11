@@ -14,7 +14,7 @@ To use this crate you need these dependencies:
 ```toml
 [dependencies]
 bytestream = "0.4.1"
-carpenter = "0.0.1"
+carpenter = "0.1.0"
 ```
 
 #### Usage
