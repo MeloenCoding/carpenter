@@ -1,25 +1,40 @@
 use carpenter::ConfigManager;
 
+// Create a struct and derive it with ConfigManager
 #[derive(ConfigManager, PartialEq, Debug)]
 struct Config {
-    _a: i32,
-    _b: bool,
-    _c: String,
+    a: i32,
+    b: bool,
+    c: String,
 }
 
-fn main() {
-    let test_config_factory = Config::create(
-        "meloencoding", 
-        "config-rs-test",
-        "test.bin"
+fn main() -> Result<(), std::io::Error>{
+    // Create config factory
+    let config_factory = Config::init_config(
+        "meloencoding", // Username
+        "config-rs-test", // Application name
+        "test.bin" // Config file name. File extention is optional
     );
 
-    let sample_config = Config {
-        _a: 400,
-        _b: true,
-        _c: String::from("Hey"),
-    };
-    test_config_factory.save(&sample_config);
+    // You could create 20 of these if you want but make sure the 
+    // config file name is different
 
-    assert_eq!(sample_config, test_config_factory.read());
+    // To save your config
+    let sample_config = Config {
+        a: 400,
+        b: true,
+        c: String::from("Hey"),
+    };
+
+    config_factory.save(&sample_config)?;
+
+    // To read the saved config
+    assert_eq!(sample_config, config_factory.read()?);
+    _test().unwrap();
+    Ok(())
+}
+
+
+fn _test() -> Result<(), ()> {
+    Ok(())
 }

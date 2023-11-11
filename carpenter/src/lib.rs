@@ -15,12 +15,3 @@ impl ConfigPath {
         }
     }
 }
-
-impl Default for ConfigPath {
-    fn default() -> Self {
-        let project_dir = ProjectDirs::from("com", "Foo Corp",  "Bar App").unwrap();
-        return Self {
-            inner: project_dir.config_dir().to_path_buf()
-        }
-    }
-}

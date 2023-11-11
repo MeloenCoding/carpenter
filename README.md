@@ -1,3 +1,13 @@
+# Carpenter
+
+Create multiple config files easily.
+
+## Support
+- Support for all Sized integers
+- Support for Strings
+- Lightweight
+- Saves as binary for small file size
+
 ## Installation/Usage
 #### Installation
 To use this crate you need these dependencies:
@@ -16,27 +26,28 @@ use carpenter::ConfigManager;
 struct Config {
     _a: i32,
     _b: bool,
-    _c: String
+    _c: String,
 }
 
 fn main() {
     // Create config builder
-    let test_config_factory = Config::create(
+    let config_factory = Config::init_config(
         "meloencoding", // username
         "config-rs-test", // application name
         "test.bin" // config file name
     );
-    
+
     // To save your config
     let sample_config = Config {
         _a: 400,
         _b: true,
         _c: String::from("Hey"),
     };
-    test_config_factory.save(&sample_config);
+
+    config_factory.save(&sample_config);
 
     // To read the saved config
-    assert_eq!(sample_config, test_config_factory.read());
+    assert_eq!(sample_config, config_factory.read());
 }
 ```
 

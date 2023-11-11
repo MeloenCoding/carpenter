@@ -20,7 +20,7 @@ fn impl_config_trait(ast: syn::DeriveInput) -> TokenStream {
     // Props
     let config_id: &Ident = &ast.ident; 
 
-    let settings_name: String = format!("{}Settings", config_id);
+    let settings_name: String = format!("{}Factory", config_id);
     let setting_id: Ident = syn::Ident::new(&settings_name, config_id.span());
 
     let fields = match data.fields {
@@ -48,7 +48,7 @@ fn impl_config_trait(ast: syn::DeriveInput) -> TokenStream {
             }
         } else {
             quote! {
-                #field_name: #field_type::read_from(stream, order).unwrap(),
+                #field_name: #field_type::read_from(stream, order)?,
             }
         }
     });
@@ -61,14 +61,14 @@ fn impl_config_trait(ast: syn::DeriveInput) -> TokenStream {
         if field.ty.to_token_stream().to_string() == "String" {
             field_write_expr = quote! {
                 for byte in self.#field_name.bytes() {
-                    stream.write_all(&[byte]).unwrap();
+                    stream.write_all(&[byte])?;
                 }
-                stream.write_all(&[0]).unwrap();
+                stream.write_all(&[0])?;
             };
         } 
         else {
             field_write_expr = quote! {
-                self.#field_name.write_to(stream, order).unwrap();
+                self.#field_name.write_to(stream, order)?;
             };
 
         }
@@ -94,36 +94,68 @@ fn impl_config_trait(ast: syn::DeriveInput) -> TokenStream {
         }
 
         impl #setting_id {
-            fn create_dir(&self) {
-                std::fs::create_dir_all(&self.path).expect("Create Dir error");
+            /// Tries to create all of the directories.
+            fn create_dir(&self) -> Result<(), std::io::Error> {
+                std::fs::create_dir_all(&self.path)?;
+                Ok(())
             }
-        
-            fn recreate_file(&self) {
+            
+            /// Tries to create the file.
+            fn create_file(&self) -> Result<(), std::io::Error> {
                 let config_file_path = self.path.join(&self.config_name);
-                let config_file = File::create(config_file_path).expect("Recreate config error");
+                let config_file = File::create(config_file_path)?;
+                Ok(())
             }
 
-            fn save(&self, config_struct: &#config_id) {
-                self.create_dir();
-                self.recreate_file();
+            /// Tries to save the struct to the config file.
+            fn save(&self, config_struct: &#config_id) -> Result<(), std::io::Error> {
+                self.create_dir()?;
+                self.create_file()?;
 
                 let config_file_path = self.path.join(&self.config_name);
                 let mut buffer = Vec::<u8>::new();
-                config_struct.write_to(&mut buffer, ByteOrder::BigEndian).expect("WriteBuffer error");
+                config_struct.write_to(&mut buffer, ByteOrder::BigEndian)?;
 
-                std::fs::write(config_file_path, buffer).expect("Write error");
+                std::fs::write(config_file_path, buffer)?;
+                Ok(())
             }
-            
-            fn read(&self) -> #config_id {
+
+            /// Tries to read the config file and parse it to the struct.
+            fn read(&self) -> Result<#config_id, std::io::Error> {
                 let config_file_path = self.path.join(&self.config_name);
-                let mut buffer = std::fs::read(config_file_path).expect("ReadBuffer error");
+                let mut buffer = std::fs::read(config_file_path)?;
                 let mut cursor = Cursor::new(buffer);
-                return #config_id::read_from(&mut cursor, ByteOrder::BigEndian).expect("ReadBuffer error");
+                return Ok(#config_id::read_from(&mut cursor, ByteOrder::BigEndian)?);
             }
         }
 
         impl #config_id {
-            pub fn create(username: &str, application_name: &str, config_name: &str) -> #setting_id {
+            /// Creates a Builder for this struct.
+            /// 
+            /// # Example
+            /// ```rust
+            /// let config_factory = Config::init_config(
+            ///    "meloencoding", // Username
+            ///    "config-rs-test", // Application name
+            ///    "test.bin" // Config file name. File extention is optional
+            /// );
+            /// ```
+            /// On this Builder struct you can call `save()` and `read()`
+            /// # Examples
+            /// ```rust
+            /// // To save your config
+            /// let sample_config = Config {
+            ///     a: 400,
+            ///     b: true,
+            ///     c: String::from("Hey"),
+            /// };
+            /// 
+            /// config_factory.save(&sample_config)?;
+            /// 
+            /// // To read the saved config
+            /// assert_eq!(sample_config, config_factory.read()?);
+            /// ```
+            pub fn init_config(username: &str, application_name: &str, config_name: &str) -> #setting_id {
                 let builder = #setting_id {
                     path: PathBuf::from(ConfigPath::new(username, application_name).inner.clone()),
                     username: username.to_string(), 

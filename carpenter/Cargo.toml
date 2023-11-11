@@ -2,6 +2,13 @@
 name = "carpenter"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "Create multiple config files easily."
+homepage = "https://github.com/MeloenCoding/carpenter"
+documentation = "https://github.com/MeloenCoding/carpenter"
+repository = "https://github.com/MeloenCoding/carpenter"
+readme = "README.md"
+keywords = ["config"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
