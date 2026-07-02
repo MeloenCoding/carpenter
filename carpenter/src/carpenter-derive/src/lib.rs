@@ -95,20 +95,20 @@ fn impl_config_trait(ast: syn::DeriveInput) -> TokenStream {
 
         impl #setting_id {
             /// Tries to create all of the directories.
-            fn create_dir(&self) -> Result<(), std::io::Error> {
+            pub fn create_dir(&self) -> Result<(), std::io::Error> {
                 std::fs::create_dir_all(&self.path)?;
                 Ok(())
             }
             
             /// Tries to create the file.
-            fn create_file(&self) -> Result<(), std::io::Error> {
+            pub fn create_file(&self) -> Result<(), std::io::Error> {
                 let config_file_path = self.path.join(&self.config_name);
                 let config_file = File::create(config_file_path)?;
                 Ok(())
             }
 
             /// Tries to save the struct to the config file.
-            fn save(&self, config_struct: &#config_id) -> Result<(), std::io::Error> {
+            pub fn save(&self, config_struct: &#config_id) -> Result<(), std::io::Error> {
                 self.create_dir()?;
                 self.create_file()?;
 
@@ -121,7 +121,7 @@ fn impl_config_trait(ast: syn::DeriveInput) -> TokenStream {
             }
 
             /// Tries to read the config file and parse it to the struct.
-            fn read(&self) -> Result<#config_id, std::io::Error> {
+            pub fn read(&self) -> Result<#config_id, std::io::Error> {
                 let config_file_path = self.path.join(&self.config_name);
                 let mut buffer = std::fs::read(config_file_path)?;
                 let mut cursor = Cursor::new(buffer);

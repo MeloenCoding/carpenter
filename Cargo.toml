@@ -1,6 +1,6 @@
 [package]
 name = "config-rs-example"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 license = "MIT"
 
@@ -9,3 +9,5 @@ license = "MIT"
 [dependencies]
 bytestream = "0.4.1"
 carpenter = { path = "carpenter"}
+serde = "1.0.228"
+toml = "1.1.2"

@@ -30,11 +30,5 @@ fn main() -> Result<(), std::io::Error>{
 
     // To read the saved config
     assert_eq!(sample_config, config_factory.read()?);
-    _test().unwrap();
-    Ok(())
-}
-
-
-fn _test() -> Result<(), ()> {
     Ok(())
 }
