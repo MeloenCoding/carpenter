@@ -9,5 +9,3 @@ license = "MIT"
 [dependencies]
 bytestream = "0.4.1"
 carpenter = { path = "carpenter"}
-serde = "1.0.228"
-toml = "1.1.2"

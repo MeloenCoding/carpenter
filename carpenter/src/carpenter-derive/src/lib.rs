@@ -86,7 +86,7 @@ fn impl_config_trait(ast: syn::DeriveInput) -> TokenStream {
         use bytestream::{StreamWriter, ByteOrder, StreamReader};
         
 
-        struct #setting_id {
+        pub struct #setting_id {
             path: PathBuf,
             username: String, 
             application_name: String,
