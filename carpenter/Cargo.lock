@@ -19,7 +19,7 @@ dependencies = [
 
 [[package]]
 name = "carpenter"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "carpenter-derive",
  "directories",
@@ -28,9 +28,9 @@ dependencies = [
 
 [[package]]
 name = "carpenter-derive"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "110ceb8a19c96da414af738ecdb1da96d302d4a88f11ba6addebc6f84c5672da"
+checksum = "5dc75f4effa0ccfa9e54722722a67b71ba5bd9a98916862b785ea3212e54b7ed"
 dependencies = [
  "byteorder",
  "bytestream",
